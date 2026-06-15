@@ -5,6 +5,7 @@
     <title>カップルバンク</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/static/style.css?v=7">
+    <link rel="manifest" href="/static/manifest.json">
 </head>
 <body>
 
@@ -130,8 +131,6 @@
 
 </main>
 
-<!-- ▼▼ PWA 用タグ ▼▼ -->
-<link rel="manifest" href="/static/manifest.json">
 <script>
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/static/service-worker.js");
