@@ -1,4 +1,4 @@
-const CACHE_NAME = "couple-bank-v3";
+const CACHE_NAME = "couplebank2-v3";
 
 const urlsToCache = [
   "/",
