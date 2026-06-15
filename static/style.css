@@ -1,0 +1,838 @@
+/* Safariの横はみ出し防止 */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    background: radial-gradient(circle at top left, rgba(95, 142, 255, 0.18), transparent 34%),
+                linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    color: #24345b;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: linear-gradient(180deg, #d6ecff 0%, #bcdcff 40%);
+    color: white;
+    height: 60px; /* ← 高さを固定する（重要） */
+    padding: 0 14px; /* ← 上下の padding を消す */
+    box-shadow: 0 10px 30px rgba(19,57,115,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.6);
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+header h1 {
+    text-align: center;       /* ← h1 のテキスト中央は維持 */
+    margin: 0;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    line-height: 1; /* ← これが決定打 */
+}
+
+/* header menu */
+.header-menu {
+    position: fixed;
+    top: -2px;
+    right: 14px;
+    z-index: 400;
+}
+
+
+
+
+
+.header-menu button#menu-toggle {
+    background: rgba(31,93,200,0.12);
+    border: none;
+    color: #1f63e0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.header-menu-panel[hidden] {
+    display: none !important;
+}
+
+.header-menu-panel {
+    position: absolute;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(20,60,120,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    min-width: 120px;
+    z-index: 400;
+}
+.header-menu-panel button {
+    background: transparent;
+    border: none;
+    padding: 8px 10px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 700;
+    color: #24345b;
+}
+
+@media (max-width: 480px) {
+    .header-menu {
+        right: 10px;
+    }
+}
+
+
+/* hide new-entry by default on list view */
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#new-entry.hidden {
+    display: none !important;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3); /* うっすら暗く */
+    backdrop-filter: blur(6px);  /* ← これが背景ぼかし */
+    z-index: 900;                /* new-entry より下、でも前面 */
+}
+
+#new-entry {
+    position: relative;
+    /* top: 20px; ← これが原因なので削除 */
+    margin-top: 20px; /* ← これに置き換える */
+    width: 90%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1000;
+    background: #fff;
+    padding: 16px;
+    padding-top: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+
+
+#new-entry.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.close-new {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #4b6cb7;
+    cursor: pointer;
+    width: auto !important;
+    display: inline-block !important;
+    padding: 0 !important;
+
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 14px 12px;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+}
+
+.container {
+    padding: 20px 18px 24px;
+    max-width: 720px;
+    margin: auto;
+    position: relative;
+
+}
+
+.card, .balance-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(245,250,255,0.9) 100%);
+    padding: 18px;
+    margin-bottom: 20px;
+    border-radius: 26px;
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: 0 20px 40px rgba(20,60,120,0.06), inset 0 2px 8px rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+}
+
+h2 {
+    margin-top: 0;
+    color: #2b6edc;
+    font-size: 18px;
+}
+
+#total-balance {
+    font-size: 52px;
+    font-weight: 900;
+    margin: 16px 0;
+    color: #1f63e0;
+    text-align: center;
+}
+
+.balance-card {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, select, textarea {
+    width: 100%;
+    min-width: 0; /* ← これが iPhone では必須 */
+    box-sizing: border-box; /* ← これも安全のため */
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.card {
+    min-width: 0;
+}
+
+.type-select {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.type-option {
+    flex: 1;
+}
+
+.type-option input {
+    display: none;
+}
+
+.type-option span {
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background: #f9fbff;
+    color: #333;
+    cursor: pointer;
+}
+
+.type-option input:checked + span {
+    background: #2b6edc;
+    color: white;
+    border-color: #2b6edc;
+}
+
+textarea {
+    height: 70px;
+}
+
+button {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 14px 16px;
+    margin-top: 14px;
+    background: linear-gradient(135deg,#4a77ff,#1f63e0);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow: 0 18px 36px rgba(31,93,200,0.18), inset 0 2px 10px rgba(255,255,255,0.12);
+    transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 20px 38px rgba(29, 84, 183, 0.24);
+    opacity: 0.98;
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 12px 22px rgba(29, 84, 183, 0.18);
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.45), transparent 30%);
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+button > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* 残高カード */
+.balance-circles {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 16px;
+    gap: 10px;
+    align-items: center; /* ← これが超重要 */
+    min-height: 0; /* ← これが決定打。iPhoneの縦伸びを止める */
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    box-shadow: inset 0 10px 18px rgba(255,255,255,0.7), 0 18px 32px rgba(27, 83, 168, 0.12);
+    border: 1px solid rgba(255,255,255,0.8);
+
+    /* ← ここを追加するだけでiPhoneでも完全な円になる */
+    align-items: center; 
+    flex-shrink: 0;
+}
+
+
+.circle.takeru {
+    background: radial-gradient(circle at 30% 20%, #eaf4ff 0%, #d4e8ff 60%, #cfe6ff 100%);
+    box-shadow: 0 18px 34px rgba(35,83,160,0.06), inset 0 6px 16px rgba(255,255,255,0.6);
+}
+
+.circle.miyuu {
+    background: radial-gradient(circle at 30% 20%, #fff1f6 0%, #ffe9f0 60%, #fff3f8 100%);
+    box-shadow: 0 18px 34px rgba(200,80,140,0.04), inset 0 6px 16px rgba(255,255,255,0.6);
+}
+
+.circle.spending {
+    background: radial-gradient(circle at 30% 20%, #eefaf0 0%, #e7fff4 60%, #f6fff9 100%);
+    box-shadow: 0 18px 34px rgba(46,160,90,0.04), inset 0 6px 16px rgba(255,255,255,0.6);
+}
+
+.circle p:first-child {
+    font-size: 14px; /* ← 好きなサイズに調整 */
+    font-weight: 900;
+    color: #2b6edc;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    margin-bottom: -8px; /* ← これを追加して間を詰める */
+}
+.circle.miyuu p:first-child { color: #c46a9e; }
+.circle.spending p:first-child { color: #2ecc71; }
+.circle.miyuu {
+    background: radial-gradient(circle at top, #ffeaf3 0%, #fff1f9 100%);
+}
+
+.circle.spending {
+    background: radial-gradient(circle at top, #e7f8ea 0%, #f4fff4 100%);
+}
+
+.circle.spending p:first-child {
+    color: #2ECC71;
+}
+
+.circle p:first-child {
+    font-weight: bold;
+    color: #2b6edc;
+}
+
+.balance-period {
+    margin: 8px 0 0;
+    color: #5f6f8a;
+    font-size: 14px;
+}
+
+.history-summary {
+    margin-bottom: 12px;
+    color: #33475b;
+    font-size: 15px;
+}
+
+.history-summary strong {
+    font-weight: 700;
+    color: #1652b4;
+}
+
+/* spending-total no longer used as visible text bubble */
+.spending-total {
+    display: none;
+}
+
+.balance-controls {
+    display: grid;
+    gap: 10px;
+    justify-items: flex-end;
+    margin-top: 6px;
+}
+
+.balance-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.toggle-spending {
+    width: auto;
+    min-width: 240px;
+    padding: 12px 24px;
+    border-radius: 60px;
+    font-size: 16px;
+    box-shadow: 0 14px 24px rgba(31, 122, 240, 0.2);
+}
+
+.toggle-spending {
+    padding: 10px 18px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg,#1f7af0,#3f78ff);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.toggle-spending.excluded {
+    background: #a0a8b8;
+}
+
+/* 履歴 */
+.record-item {
+    background: rgba(255,255,255,0.96);
+    padding: 16px;
+    margin-bottom: 14px;
+    border-radius: 24px;
+    border-left: 6px solid #2b6edc;
+    box-shadow: 0 24px 60px rgba(18, 52, 122, 0.12);
+}
+
+.record-item.saving {
+    border-left-color: #7FE7FF;
+    background: rgba(127, 231, 255, 0.08);
+}
+
+.record-item.spending {
+    border-left-color: #FFB84D;
+    background: rgba(255, 184, 77, 0.08);
+}
+
+.record-main {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.record-type.saving {
+    color: #7FE7FF;
+}
+
+.record-type.spending {
+    color: #FFB84D;
+}
+
+.record-amounts {
+    display: block;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.amount-pill {
+    display: block;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;    /* 行間 */
+}
+
+.amount-takeru {
+    background: #8cc1fa;
+}
+
+.amount-miyuu {
+background: #faa9cb;
+}
+
+.amount-shared {
+    background: linear-gradient(135deg, #f4fff4, #f4fff4);
+}
+
+.amount-both {
+    background: linear-gradient(135deg, #2b6edc, #C46A9E);
+    box-shadow: 0 8px 18px rgba(43,110,220,0.12);
+    padding: 10px 16px;
+}
+
+.record-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.delete-btn {
+    background: #666666;
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+/* 金額バッジと操作を横並びにする行 */
+.record-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.record-actions .delete-btn {
+    width: auto;
+    padding: 10px 18px;
+    border-radius: 12px;
+}
+
+@media (max-width: 520px) {
+    .record-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .record-actions .delete-btn {
+        width: 100%;
+    }
+}
+
+.reflect-btn {
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.reflect-btn.included {
+    background: #1f7af0;
+    color: #fff;
+}
+
+.reflect-btn.excluded {
+    background: #a0a8b8;
+    color: #fff;
+}
+.record-memo {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #555;
+}
+
+.delete-btn {
+    background: #777777;
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+/* 検索欄 */
+.search-area {
+    display: grid;
+    gap: 14px;
+    padding: 20px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid rgba(215, 226, 242, 0.9);
+    border-radius: 28px;
+    box-shadow: 0 22px 52px rgba(46, 82, 187, 0.08);
+}
+
+.search-area input[type="text"],
+.search-area select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid #d7e2f2;
+    background: #ffffff;
+    font-size: 16px;
+    box-shadow: inset 0 1px 2px rgba(16, 50, 120, 0.06);
+}
+
+.search-area select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #667eea 50%),
+                      linear-gradient(135deg, #667eea 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(50% - 4px), calc(100% - 14px) calc(50% - 4px);
+    background-size: 8px 8px, 8px 8px;
+    background-repeat: no-repeat;
+}
+
+.search-row {
+    display: grid;
+    grid-template-columns: minmax(160px, auto) minmax(160px, auto) 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.period-group {
+    display: grid;
+    gap: 8px;
+}
+
+.period-group span {
+    color: #4b6cb7;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.search-row button {
+    padding: 14px 0;
+    border-radius: 16px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 12px 20px rgba(58, 116, 255, 0.18);
+}
+
+.search-row button:first-of-type {
+    background: linear-gradient(135deg, #3f78ff, #1f5af4);
+}
+
+.search-row button:last-of-type {
+    background: linear-gradient(135deg, #6f8df7, #3b64f1);
+}
+
+@media (max-width: 760px) {
+    .search-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .search-row select,
+    .search-row button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .search-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 共同バッジを緑ベースに変更（全ての共有バッジに適用） */
+.amount-shared {
+    background: linear-gradient(135deg, #2f8f47, #66bb6a);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(47, 143, 71, 0.12);
+}
+
+#search-entry.visible,
+#new-entry.visible {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* 🔥 検索フォームを overlay より前に出すための決定版 */
+#search-entry .modal-card {
+    width: 85%;
+    max-width: 340px;   /* ← 新規追加と同じサイズ感 */
+    margin-left: auto;
+    margin-right: auto;
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 12px;
+    box-shadow: none !important;
+}
+
+
+
+
+
+/* visible 時の制御はそのままで OK */
+#search-entry.visible {
+    opacity: 1 !important;
+    pointer-events: auto;
+}
+
+/* 金額バッジと削除ボタンを横並びにする */
+.record-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Safari で削除ボタンが落ちないようにする */
+.record-actions .delete-btn {
+    width: auto;
+    white-space: nowrap;
+    margin-top: 0; /* 下に落ちる原因を消す */
+}
+
+.record-list,
+.record-list li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#records-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+#records-list li {
+    list-style: none !important;
+}
+
+/* ▼ 金額バッジを縦に並べる（2つ以上のとき2行になる） */
+.record-amounts {
+    display: flex;
+    flex-direction: column; /* ← これで縦並び */
+    gap: 4px;
+}
+
+/* ▼ 削除ボタンが横に伸びないようにする */
+.delete-btn {
+    white-space: nowrap;
+    width: auto;          /* ← これで横に伸びない */
+    flex-shrink: 0;       /* ← Safari が勝手に伸ばすのを防ぐ */
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+/* ▼ 金額と削除ボタンを横並びに固定 */
+.record-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+input:disabled {
+    background-color: #eee;
+    color: #888;
+    cursor: not-allowed;
+}
+
+input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Safari 専用：date input の高さを戻す */
+@supports (-webkit-touch-callout: none) {
+    input[type="date"] {
+        height: 44px; /* ← 好きな高さに調整できる */
+        line-height: 44px;
+        padding: 0 12px;
+    }
+}
+/* 🔥 検索フォームのモーダル外枠（これが無いのが原因） */
+#search-entry {
+    display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(0,0,0,0.4);
+    transition: opacity .25s ease;
+}
+
+#search-entry.visible {
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: auto;
+}
+
+
+
+#search-entry .search-area {
+    position: relative;
+    width: 85%;
+    max-width: 340px;  /* ← 新規追加と同じサイズ感 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#close-search {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+
+    border-radius: 50%;
+    background: #e5e9f5;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 0;
+}
+
+
+.saving-toggle {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #b4b3b3;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.saving-toggle.checked {
+    background: #a4defc;
+    color: #ffffff;
+}
+
+.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#search-entry.hidden {
+    display: none !important;
+}

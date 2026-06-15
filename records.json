@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1781418537457,
+    "type": "saving",
+    "date": "2026-06-14",
+    "title": "く",
+    "takeru": 1000,
+    "miyuu": 1000,
+    "shared": 0,
+    "reflect": true,
+    "memo": ""
+  },
+  {
+    "id": 1781418516476,
+    "type": "spending",
+    "date": "2026-06-14",
+    "title": "い",
+    "takeru": 0,
+    "miyuu": 0,
+    "shared": 4000,
+    "reflect": true,
+    "memo": ""
+  },
+  {
+    "id": 1781418488925,
+    "type": "saving",
+    "date": "",
+    "title": "え",
+    "takeru": 0,
+    "miyuu": 3000,
+    "shared": 0,
+    "reflect": true,
+    "memo": ""
+  },
+  {
+    "id": 1781349723203,
+    "type": "saving",
+    "date": "2026-06-13",
+    "title": "っh",
+    "takeru": 5000,
+    "miyuu": 0,
+    "shared": 0,
+    "reflect": true,
+    "memo": ""
+  },
+  {
+    "id": 1781329522935,
+    "type": "saving",
+    "date": "2026-06-13",
+    "title": "sss",
+    "takeru": 2000,
+    "miyuu": 0,
+    "shared": 0,
+    "reflect": true,
+    "memo": ""
+  }
+]

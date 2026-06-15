@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>カップルバンク</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/style.css?v=7">
+</head>
+<body>
+
+<header>
+    <h1>カップルバンク</h1>
+</header>
+
+<div class="header-menu">
+    <button id="menu-toggle" aria-haspopup="true" aria-expanded="false">☰</button>
+    <div id="header-menu-panel" class="header-menu-panel" hidden>
+        <button id="menu-new">新規追加</button>
+        <button id="menu-search">検索</button>
+    </div>
+</div>
+
+<div id="overlay" class="overlay hidden"></div>
+
+<main class="container">
+
+    <!-- 新規追加フォーム -->
+    <section class="card hidden" id="new-entry" aria-hidden="true">
+        <h2>新規追加</h2>
+        <button id="close-new" class="close-new" aria-label="閉じる">✕</button>
+
+        <label>種類</label>
+        <div class="type-select">
+            <label class="type-option">
+                <input type="radio" name="type" value="saving" checked onchange="selectType('saving')">
+                <span>貯金</span>
+            </label>
+
+            <label class="type-option">
+                <input type="radio" name="type" value="spending" onchange="selectType('spending')">
+                <span>支出</span>
+            </label>
+        </div>
+
+        <label>日付</label>
+        <input type="date" id="date">
+
+        <label>タイトル</label>
+        <input type="text" id="title">
+
+        <label>TAKERU</label>
+        <input type="number" id="takeru" value="" placeholder="0">
+
+        <label>MIYUU</label>
+        <input type="number" id="miyuu" value="" placeholder="0">
+
+        <label>共同</label>
+        <input type="number" id="shared" value="" placeholder="0">
+
+        <label>メモ</label>
+        <textarea id="memo"></textarea>
+
+        <button id="add-btn">追加</button>
+    </section>
+
+    <!-- 🔍 検索フォーム（開始日・終了日） -->
+    <section class="card hidden" id="search-entry" aria-hidden="true">
+        <div class="modal-card">
+            <div class="search-area">
+                <h2>検索</h2>
+                <button id="close-search" class="close-search" aria-label="閉じる">✕</button>
+
+                <input type="text" id="keyword" placeholder="フリーワード検索">
+
+                <div class="search-row">
+                    <label>開始日</label>
+                    <input type="date" id="fromDate">
+                </div>
+
+                <div class="search-row">
+                    <label>終了日</label>
+                    <input type="date" id="toDate">
+                </div>
+
+                <button id="search-exec">検索</button>
+                <button id="search-reset">リセット</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 残高表示 -->
+    <section class="balance-card">
+        <h2>現在の残高</h2>
+        <p id="total-balance">0円</p>
+        <p id="balance-period" class="balance-period">期間：全期間</p>
+
+        <div class="balance-circles">
+            <div class="circle takeru">
+                <p>TAKERU</p>
+                <p id="takeru-balance">0円</p>
+            </div>
+            <div class="circle miyuu">
+                <p>MIYUU</p>
+                <p id="miyuu-balance">0円</p>
+            </div>
+            <div class="circle spending">
+                <p>支出</p>
+                <p id="spending-total">0円</p>
+            </div>
+        </div>
+
+        <div class="balance-actions">
+            <button id="toggle-spending" class="toggle-spending">支出を表示しない</button>
+        </div>
+    </section>
+
+    <!-- 履歴 -->
+    <section class="card">
+        <h2>
+            履歴
+            <span id="filter-info" style="font-size:14px; color:#888; margin-left:6px;"></span>
+        </h2>
+
+        <div class="history-summary">
+            <span>現在の合計: <strong id="history-total-balance">0円</strong></span>
+        </div>
+
+        <ul id="records-list"></ul>
+    </section>
+
+</main>
+
+<!-- ▼▼ PWA 用タグ ▼▼ -->
+<link rel="manifest" href="/static/manifest.json">
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/static/service-worker.js");
+}
+</script>
+<!-- ▲▲ ここまで ▲▲ -->
+
+<script src="/static/app.js?v=9"></script>
+
+</body>
+</html>
