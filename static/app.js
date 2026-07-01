@@ -67,7 +67,7 @@ async function loadRecords() {
     const records = await getAllRecords();
     window.recordsData = records;
 
-    renderRecords(records);
+    renderRecords(records);   // ← ここを必ず renderRecords にする
     updateBalance(records);
     updateBalancePeriod("全期間");
 }
@@ -145,7 +145,11 @@ async function search() {
 document.addEventListener("DOMContentLoaded", async () => {
     await initDB();
     await migrateFromLocalStorage();
-    await loadRecords();
+    const records = await getAllRecords();
+    window.recordsData = records;
+
+    renderRecords(records);   // ← ここも renderRecords に統一
     setupHeaderMenu();
     formatAmounts();
 });
+
